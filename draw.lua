@@ -10,12 +10,6 @@ local show = ffi.new("bool[1]", true)
 local files = {}
 local curfile = 0
 
-function tableLength(T)
-    local count = 0
-    for _ in pairs(T) do count = count + 1 end
-    return count
-end  
-
 return function()
     -- fullscreen window of tabs for property files
     
@@ -61,8 +55,16 @@ return function()
                     curfile = k
 
                     if imgui.Button("New") then
-                        local key = "new"..tableLength(v.data)
-                        v.data[key] = "value"
+                        local key = "new"
+                        if (v.data[key] ~= nil) then
+                            local num = 1
+                            while(v.data[key..num] ~= nil) do
+                                num = num + 1
+                            end
+                            v.data[key..num] = "value"
+                        else
+                            v.data[key] = "value"
+                        end
                     end
                     imgui.SameLine()
                     if imgui.Button("Delete") then
